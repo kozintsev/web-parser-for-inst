@@ -1,8 +1,17 @@
 <?
+//Игнорировать обрыв связи с браузером
+ignore_user_abort(1);
+//Время работы скрипта неограничено
+set_time_limit(0);
+
+require_once("vendor/autoload.php");
+require_once("models/Proxy.php");
+require_once("actions/uploadPhoto.php");
 require_once("lib/curl_query.php");
 require_once("lib/simple_html_dom.php");
 
 $host = "https://www.goodfon.ru";
+$photo_folder = "c:/OpenServer/domains/web-parser-for-inst/";
 
 $start_url = $host . "/catalog/nature/";
 $html = curl_get($start_url);
@@ -25,7 +34,25 @@ foreach($elems as $a){
         echo $img_url;     
         $data = curl_get($img_url);
         $filename = uniqid() . ".jpg"; // имя файла которе будем отправлять
-        file_put_contents($filename, $data);  
+        file_put_contents($filename, $data);
+
+        $photo = $photo_folder . $filename;
+        $username = "dunsolomon";
+        $password = "c63255bb2f";
+        
+        //$proxy = new Proxy();
+        //$proxy->setIporhost($item['iporhost']);
+        //$proxy->setPort($item['port']);
+        //$proxy->setLogin($item['login']);
+        //$proxy->setPassword($item['password']);
+        //$proxy->setType($item['host_type']);
+
+        //$uploadPhoto = new UploadPhoto($username, $password, $photo, $msg);
+        // $uploadPhoto->setProxy($proxy);
+        //$uploadPhoto->run();
+        //if($uploadPhoto->isError()){
+        //    $err_msg = $uploadPhoto->getMessage();
+        //} 
 
         unlink($filename); // удаляем файл после отправки
     }
